@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:tetris/side-decoration.dart';
+import './tile.dart';
 
 void main() {
   runApp(MyApp());
@@ -84,12 +86,36 @@ class _MyHomePageState extends State<MyHomePage> {
             Column(
               children: [
                 Container(
+                  padding: EdgeInsets.fromLTRB(15, 50, 0, 15),
                   height: MediaQuery.of(context).copyWith().size.height * 0.65,
-                  color: Colors.red,
+                  // color: Colors.red,
                   child: Row(
-                    children: [],
+                    children: [
+                      SideDecoration(
+                        reverse: false,
+                      ),
+                      Container(
+                        height: 1000,
+                        margin: EdgeInsets.all(15),
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: new ConstrainedBox(
+                          constraints: new BoxConstraints(
+                            // minHeight: 500,
+                            minWidth: 280,
+                          ),
+                          child: new DecoratedBox(
+                            decoration: new BoxDecoration(
+                                color: Colors.lightGreen[100]),
+                          ),
+                        ),
+                      ),
+                      SideDecoration(
+                        reverse: true,
+                      ),
+                    ],
                   ),
-                )
+                ),
               ],
             ),
             Column(
