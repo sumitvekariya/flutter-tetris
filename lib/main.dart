@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:tetris/digit.dart';
+import 'package:tetris/logo.dart';
+import 'package:tetris/right-panel.dart';
 import 'package:tetris/side-decoration.dart';
-import './tile.dart';
+import 'dart:math' as math;
 
 void main() {
   runApp(MyApp());
@@ -87,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Container(
                   padding: EdgeInsets.fromLTRB(15, 50, 0, 15),
-                  height: MediaQuery.of(context).copyWith().size.height * 0.65,
+                  height: MediaQuery.of(context).copyWith().size.height * 0.68,
                   // color: Colors.red,
                   child: Row(
                     children: [
@@ -95,18 +97,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         reverse: false,
                       ),
                       Container(
-                        height: 1000,
-                        margin: EdgeInsets.all(15),
+                        margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        width:
+                            MediaQuery.of(context).copyWith().size.width * 0.70,
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(border: Border.all()),
-                        child: new ConstrainedBox(
-                          constraints: new BoxConstraints(
-                            // minHeight: 500,
-                            minWidth: 280,
-                          ),
-                          child: new DecoratedBox(
-                            decoration: new BoxDecoration(
-                                color: Colors.lightGreen[100]),
+                        child: new DecoratedBox(
+                          decoration:
+                              new BoxDecoration(color: Colors.lightGreen[100]),
+                          child: Row(
+                            children: [
+                              Container(
+                                  margin: EdgeInsets.all(3),
+                                  decoration:
+                                      BoxDecoration(border: Border.all()),
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(math.pi),
+                                    child: Logo(),
+                                  )),
+                              Container(child: RightPanel())
+                            ],
                           ),
                         ),
                       ),
@@ -121,9 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Column(
               children: [
                 Container(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                     height:
-                        MediaQuery.of(context).copyWith().size.height * 0.35,
+                        MediaQuery.of(context).copyWith().size.height * 0.32,
                     // color: Colors.blue,
                     child: Column(
                       children: [
