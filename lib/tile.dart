@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const double boxSize = 10.0;
+const double boxSize = 13.7;
 final Color tileColor = Colors.black;
-final Color paleTileColor = Colors.grey[400];
+final Color paleTileColor = Colors.black12;
 
 class Tile extends StatelessWidget {
   final bool isPale;

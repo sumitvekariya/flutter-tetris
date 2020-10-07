@@ -1,94 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:tetris/digit.dart';
-import 'package:tetris/logo.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:tetris/interface/game-store.dart';
+import 'package:tetris/store/store.dart';
+import 'package:tetris/matrix.dart';
 import 'package:tetris/right-panel.dart';
 import 'package:tetris/side-decoration.dart';
-import 'dart:math' as math;
 
 void main() {
-  runApp(MyApp());
+  runApp(TetrisApp());
 }
 
-class MyApp extends StatelessWidget {
+class TetrisApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tetris',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        backgroundColor: Colors.amberAccent,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Tetris'),
-    );
-  }
+  Widget build(BuildContext context) => Provider<TetrisStore>(
+      create: (_) => TetrisStore(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Tetris',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+          backgroundColor: Colors.amberAccent,
+          // This makes the visual density adapt to the platform that you run
+          // the app on. For desktop platforms, the controls will be smaller and
+          // closer together (more dense) than on mobile platforms.
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage(title: 'Tetris'),
+      ));
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final TetrisStore tetriState = Provider.of<TetrisStore>(context);
+
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: SingleChildScrollView(
-            // Center is a layout widget. It takes a single child and positions it
-            // in the middle of the parent.
-            child: Flex(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: SingleChildScrollView(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Flex(
           direction: Axis.vertical,
           children: [
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(15, 50, 0, 15),
+                  // decoration: BoxDecoration(border: Border.all()),
+                  padding: EdgeInsets.fromLTRB(15, 40, 0, 0),
                   height: MediaQuery.of(context).copyWith().size.height * 0.68,
                   // color: Colors.red,
                   child: Row(
@@ -107,16 +80,38 @@ class _MyHomePageState extends State<MyHomePage> {
                               new BoxDecoration(color: Colors.lightGreen[100]),
                           child: Row(
                             children: [
-                              Container(
-                                  margin: EdgeInsets.all(3),
-                                  decoration:
-                                      BoxDecoration(border: Border.all()),
-                                  child: Transform(
-                                    alignment: Alignment.center,
-                                    transform: Matrix4.rotationY(math.pi),
-                                    child: Logo(),
-                                  )),
-                              Container(child: RightPanel())
+                              Observer(
+                                builder: (_) => Container(
+                                    foregroundDecoration:
+                                        tetriState.gameState ==
+                                                GameState.Loading
+                                            ? BoxDecoration(
+                                                image: new DecorationImage(
+                                                image: new ExactAssetImage(
+                                                    'assets/img/pankhi.png'),
+                                                fit: BoxFit.contain,
+                                              ))
+                                            : null,
+                                    margin: EdgeInsets.all(3),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.49,
+                                    decoration:
+                                        BoxDecoration(border: Border.all()),
+                                    // child: Transform(
+                                    //   alignment: Alignment.center,
+                                    //   transform: Matrix4.rotationY(math.pi),
+                                    //   child: Logo(),
+                                    // )),
+                                    child: tetriState.matrix.length > 0
+                                        ? MatrixView(tetriState)
+                                        : Container()),
+                              ),
+                              Flexible(
+                                // width: MediaQuery.of(context).size.width * 0.15,
+                                // direction: Axis.vertical,
+                                child: RightPanel(),
+                                // decoration: BoxDecoration(border: Border.all()),
+                              )
                             ],
                           ),
                         ),
@@ -132,161 +127,180 @@ class _MyHomePageState extends State<MyHomePage> {
             Column(
               children: [
                 Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                    height:
-                        MediaQuery.of(context).copyWith().size.height * 0.32,
-                    // color: Colors.blue,
-                    child: Column(
-                      children: [
-                        Flex(
-                          direction: Axis.horizontal,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Ink(
-                              decoration: const ShapeDecoration(
-                                color: Colors.green,
-                                shape: CircleBorder(),
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.pause_circle_filled,
-                                  color: Colors.white,
-                                ),
-                                iconSize: 30,
-                                onPressed: null,
-                              ),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                  height: MediaQuery.of(context).copyWith().size.height * 0.32,
+                  // color: Colors.blue,
+                  child: Column(
+                    children: [
+                      Flex(
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Observer(
+                              builder: (_) => Ink(
+                                    decoration: const ShapeDecoration(
+                                      color: Colors.green,
+                                      shape: CircleBorder(),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        tetriState.gameState != null &&
+                                                (tetriState.gameState ==
+                                                        GameState.Loading ||
+                                                    tetriState.gameState ==
+                                                        GameState.Over ||
+                                                    tetriState.gameState ==
+                                                        GameState.Paused)
+                                            ? Icons.play_arrow_rounded
+                                            : Icons.pause_circle_filled,
+                                        color: Colors.white,
+                                      ),
+                                      iconSize: 30,
+                                      onPressed: tetriState.gameState ==
+                                              GameState.Started
+                                          ? tetriState.pause
+                                          : tetriState.gameState ==
+                                                  GameState.Paused
+                                              ? tetriState.resume
+                                              : tetriState.start,
+                                    ),
+                                  )),
+                          SizedBox(width: 10),
+                          Observer(
+                              builder: (_) => Ink(
+                                    decoration: const ShapeDecoration(
+                                      color: Colors.green,
+                                      shape: CircleBorder(),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        tetriState.sound == true
+                                            ? Icons.music_off_outlined
+                                            : Icons.music_note,
+                                        color: Colors.white,
+                                      ),
+                                      iconSize: 30,
+                                      onPressed: tetriState.muteUnmute,
+                                    ),
+                                  )),
+                          SizedBox(width: 10),
+                          Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.red,
+                              shape: CircleBorder(),
                             ),
-                            SizedBox(width: 10),
-                            Ink(
-                              decoration: const ShapeDecoration(
-                                color: Colors.green,
-                                shape: CircleBorder(),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.restore,
+                                color: Colors.white,
                               ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.music_note,
-                                  color: Colors.white,
-                                ),
-                                iconSize: 30,
-                                onPressed: null,
-                              ),
+                              iconSize: 30,
+                              onPressed: tetriState.reset,
                             ),
-                            SizedBox(width: 10),
-                            Ink(
-                              decoration: const ShapeDecoration(
-                                color: Colors.red,
-                                shape: CircleBorder(),
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.restore,
-                                  color: Colors.white,
-                                ),
-                                iconSize: 30,
-                                onPressed: null,
-                              ),
+                          ),
+                          SizedBox(width: 80),
+                          Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.deepPurpleAccent,
+                              shape: CircleBorder(),
                             ),
-                            SizedBox(width: 80),
-                            Ink(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.rotate_right,
+                                color: Colors.white,
+                              ),
+                              iconSize: 55,
+                              onPressed: tetriState.rotate,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Flex(
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(width: 30),
+                          Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.deepPurpleAccent,
+                              shape: CircleBorder(),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_downward,
+                                color: Colors.white,
+                              ),
+                              iconSize: 90,
+                              onPressed: tetriState.drop,
+                            ),
+                          ),
+                          SizedBox(width: 35),
+                          Container(
+                            transform: Matrix4.translationValues(5, -25, 0),
+                            child: Ink(
                               decoration: const ShapeDecoration(
                                 color: Colors.deepPurpleAccent,
                                 shape: CircleBorder(),
                               ),
                               child: IconButton(
                                 icon: Icon(
-                                  Icons.arrow_drop_up,
+                                  Icons.arrow_left,
                                   color: Colors.white,
                                 ),
                                 iconSize: 55,
-                                onPressed: null,
+                                onPressed: tetriState.moveLeft,
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Flex(
-                          direction: Axis.horizontal,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(width: 30),
-                            Ink(
+                          ),
+                          // SizedBox(width: 5),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 35, 0, 0),
+                            child: Ink(
                               decoration: const ShapeDecoration(
                                 color: Colors.deepPurpleAccent,
                                 shape: CircleBorder(),
                               ),
                               child: IconButton(
                                 icon: Icon(
-                                  Icons.arrow_downward,
+                                  Icons.arrow_drop_down,
                                   color: Colors.white,
                                 ),
-                                iconSize: 90,
-                                onPressed: null,
+                                iconSize: 55,
+                                onPressed: tetriState.moveDown,
                               ),
                             ),
-                            SizedBox(width: 35),
-                            Container(
-                              transform: Matrix4.translationValues(5, -25, 0),
-                              child: Ink(
-                                decoration: const ShapeDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  shape: CircleBorder(),
+                          ),
+                          // SizedBox(width: 5),
+                          Container(
+                            transform: Matrix4.translationValues(-3, -27, 0),
+                            child: Ink(
+                              decoration: const ShapeDecoration(
+                                color: Colors.deepPurpleAccent,
+                                shape: CircleBorder(),
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_right,
+                                  color: Colors.white,
                                 ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_left,
-                                    color: Colors.white,
-                                  ),
-                                  iconSize: 55,
-                                  onPressed: null,
-                                ),
+                                iconSize: 55,
+                                onPressed: tetriState.moveRight,
                               ),
                             ),
-                            // SizedBox(width: 5),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 35, 0, 0),
-                              child: Ink(
-                                decoration: const ShapeDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  shape: CircleBorder(),
-                                ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_drop_down,
-                                    color: Colors.white,
-                                  ),
-                                  iconSize: 55,
-                                  onPressed: null,
-                                ),
-                              ),
-                            ),
-                            // SizedBox(width: 5),
-                            Container(
-                              transform: Matrix4.translationValues(-3, -27, 0),
-                              child: Ink(
-                                decoration: const ShapeDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  shape: CircleBorder(),
-                                ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_right,
-                                    color: Colors.white,
-                                  ),
-                                  iconSize: 55,
-                                  onPressed: null,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ))
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             )
           ],
-        )) // This trailing comma makes auto-formatting nicer for build methods.
-        );
+        ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }

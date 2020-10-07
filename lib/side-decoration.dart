@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:tetris/tile.dart';
 
 const double emptyBoxSize = 16;
+const double tileSize = 10.0;
 
 class SideDecoration extends StatelessWidget {
   final bool reverse;
@@ -47,7 +48,7 @@ class LeftSingleTile extends StatelessWidget {
   LeftSingleTile({Key key, @required this.reverse}) : super(key: key);
 
   final List<Widget> leftSingle = [
-    Tile(),
+    Tile(size: tileSize),
     SizedBox(
       width: emptyBoxSize,
     ),
@@ -68,7 +69,7 @@ class RightSingleTile extends StatelessWidget {
     SizedBox(
       width: emptyBoxSize,
     ),
-    Tile(),
+    Tile(size: tileSize),
   ];
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,12 @@ class DoubleTile extends StatelessWidget {
     return Row(
       children: [
         Row(
-          children: [Tile(), Tile()],
+          children: [
+            Tile(
+              size: tileSize,
+            ),
+            Tile(size: tileSize)
+          ],
         )
       ],
     );
