@@ -25,7 +25,7 @@ It all began with a puzzle-loving software engineer named Alexey Pajitnov, who c
 
 ## Working Game
 
-Check out the **working game** -> https://invaders.trungk18.com
+Check out the **working game** -> https://play.google.com/store/apps/details?id=com.sumit.tetris
 
 The game has sounds, wear your 🎧 or turn on your 🔊 for a better experience.
 
@@ -74,7 +74,6 @@ The below table listed all of the awesome resources that I have referenced to
 | [Generate Digital Digit][generate-digit]                  | To genrate Digital digits in Flutter                  |
 | [State Management][mobx-state-management]                            | Supercharge the state-management in your Dart apps with Transparent 
 | [Sound][assets-audio-player]                        | How to build a simple game in the browser with Phaser 3 and TypeScript                                                                                   |
-| [Space Invaders Sounds Effects][sounds]                                 | Sound effects from the classic arcade game Space Invaders released in 1978 by Taito.                                                                     |  |
 
 ## Upcoming
 
@@ -96,7 +95,8 @@ Feel free to use my code on your project. It would be great if you put a referen
 [MIT](https://opensource.org/licenses/MIT)
 
 [twitter]: https://twitter.com/sarkazein7
-[demo]: https://www.instagram.com/p/CFBo7NXgwVI/
+[angular-tetris]: https://github.com/trungk18/angular-tetris
+[demo]: screenshots/1-screen__1.jpg
 [generate-digit]: https://github.com/killermonk/octal_clock_app/tree/step2
 [mobx-state-management]: https://pub.dev/packages/mobx
 [assets-audio-player]: https://pub.dev/packages/assets_audio_player
