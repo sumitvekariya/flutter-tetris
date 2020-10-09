@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:tetris/interface/game-store.dart';
+import 'package:tetris/sound/sound-manager.dart';
 import 'package:tetris/store/store.dart';
 import 'package:tetris/matrix.dart';
 import 'package:tetris/right-panel.dart';
@@ -48,6 +50,11 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TetrisStore tetriState = Provider.of<TetrisStore>(context);
+
+    ReactionDisposer _disposer = reaction(
+        (_) => tetriState.gameState == GameState.Over,
+        (result) => displayDialog(context, tetriState),
+        delay: 1000);
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -302,5 +309,39 @@ class MyHomePage extends StatelessWidget {
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+displayDialog(BuildContext context, TetrisStore tetriState) async {
+  if (tetriState.gameState == GameState.Over) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          final dialog = AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Container(
+              width: 300,
+              height: 250,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.zero,
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          'https://statics.pampling.com/imagenes/disenos/diseno_77115.jpg'),
+                      fit: BoxFit.cover)),
+            ),
+            actions: [
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  tetriState.reset();
+                },
+                child: Text('Restart'),
+                color: Colors.amber,
+                highlightColor: Colors.amber,
+              )
+            ],
+          );
+          return dialog;
+        });
   }
 }

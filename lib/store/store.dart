@@ -49,7 +49,7 @@ abstract class _TetrisStore with Store {
   @observable
   TetrisState saved;
 
-  int max;
+  int max = 0;
 
   Timer _gameInterval;
 
@@ -272,13 +272,12 @@ abstract class _TetrisStore with Store {
   _onGameOver() {
     this.pause();
     SoundManager.gameOver(sound);
-    var maxPoint =
-        [points, max].reduce((curr, next) => curr > next ? curr : next);
+    var maxPoint = points > max ? points : max;
     // LocalStorageService.setMaxPoint(maxPoint);
 
     this.max = maxPoint;
     this.gameState = GameState.Over;
-    this.createInitialState();
+    // this.createInitialState();
   }
 
   pause() {
